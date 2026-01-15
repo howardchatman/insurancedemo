@@ -116,11 +116,11 @@ export default function Navbar() {
           {/* Right Actions */}
           <div className="hidden lg:flex items-center space-x-4">
             <a
-              href="tel:+18327707998"
+              href="tel:+13464820150"
               className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-primary-700 transition-colors"
             >
               <Phone className="w-4 h-4" />
-              <span className="font-medium">(832) 770-7998</span>
+              <span className="font-medium">(346) 482-0150</span>
             </a>
             <a
               href="#quote"
@@ -181,11 +181,11 @@ export default function Navbar() {
 
               <hr className="my-2" />
               <a
-                href="tel:+18327707998"
+                href="tel:+13464820150"
                 className="flex items-center space-x-2 text-gray-600 py-2"
               >
                 <Phone className="w-4 h-4" />
-                <span className="font-medium">(832) 770-7998</span>
+                <span className="font-medium">(346) 482-0150</span>
               </a>
               <a
                 href="#quote"
