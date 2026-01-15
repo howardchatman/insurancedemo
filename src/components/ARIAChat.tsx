@@ -413,7 +413,7 @@ export default function ARIAChat() {
           setIsOpen(!isOpen);
           setIsMinimized(false);
         }}
-        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all transform hover:scale-110 ${
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all transform hover:scale-110 ${
           isOpen
             ? "bg-gray-800 rotate-0"
             : "bg-gradient-to-br from-primary-700 to-primary-900"
@@ -432,9 +432,9 @@ export default function ARIAChat() {
 
       {/* Chat Window */}
       {isOpen && !isMinimized && (
-        <div className="fixed bottom-28 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col" style={{ height: "600px" }}>
+        <div className="fixed bottom-24 right-4 left-4 sm:left-auto sm:right-6 sm:w-96 z-50 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[calc(100vh-120px)] sm:max-h-[600px]">
           {/* Header */}
-          <div className="bg-gradient-to-r from-primary-800 to-primary-900 p-4 flex items-center justify-between">
+          <div className="bg-gradient-to-r from-primary-800 to-primary-900 p-4 flex items-center justify-between flex-shrink-0">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
@@ -458,11 +458,11 @@ export default function ARIAChat() {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center space-x-2 p-3 bg-gray-50 border-b">
+          <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 border-b flex-shrink-0">
             <button
               onClick={() => handleQuickAction("call")}
               disabled={isConnecting}
-              className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm transition-colors border ${
+              className={`flex items-center space-x-1 px-3 py-2 rounded-full text-sm transition-colors border flex-1 sm:flex-none justify-center ${
                 isCallActive
                   ? "bg-red-100 text-red-600 border-red-200 hover:bg-red-200"
                   : isConnecting
@@ -489,14 +489,14 @@ export default function ARIAChat() {
             </button>
             <button
               onClick={() => handleQuickAction("schedule")}
-              className="flex items-center space-x-1 px-3 py-1.5 bg-white rounded-full text-sm text-gray-600 hover:bg-primary-50 hover:text-primary-700 transition-colors border border-gray-200"
+              className="flex items-center space-x-1 px-3 py-2 bg-white rounded-full text-sm text-gray-600 hover:bg-primary-50 hover:text-primary-700 transition-colors border border-gray-200 flex-1 sm:flex-none justify-center"
             >
               <Calendar className="w-4 h-4" />
               <span>Consult</span>
             </button>
             <button
               onClick={() => handleQuickAction("quote")}
-              className="flex items-center space-x-1 px-3 py-1.5 bg-white rounded-full text-sm text-gray-600 hover:bg-primary-50 hover:text-primary-700 transition-colors border border-gray-200"
+              className="flex items-center space-x-1 px-3 py-2 bg-white rounded-full text-sm text-gray-600 hover:bg-primary-50 hover:text-primary-700 transition-colors border border-gray-200 flex-1 sm:flex-none justify-center"
             >
               <Shield className="w-4 h-4" />
               <span>Quote</span>
@@ -505,7 +505,7 @@ export default function ARIAChat() {
 
           {/* Active Call Indicator */}
           {isCallActive && (
-            <div className="bg-trust-50 border-b border-trust-100 px-4 py-3 flex items-center justify-between">
+            <div className="bg-trust-50 border-b border-trust-100 px-4 py-3 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <Volume2 className="w-5 h-5 text-trust-600 animate-pulse" />
                 <span className="text-sm font-medium text-trust-700">Voice call active - ARIA is listening</span>
@@ -662,7 +662,7 @@ export default function ARIAChat() {
           </div>
 
           {/* Input */}
-          <div className="p-4 bg-white border-t">
+          <div className="p-3 sm:p-4 bg-white border-t flex-shrink-0">
             <div className="flex items-center space-x-2">
               <input
                 type="text"
@@ -670,11 +670,11 @@ export default function ARIAChat() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSendMessage(inputValue)}
                 placeholder="Type a message..."
-                className="flex-1 px-4 py-3 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="flex-1 min-w-0 px-4 py-3 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               <button
                 onClick={() => handleSendMessage(inputValue)}
-                className="p-3 bg-gradient-to-r from-primary-700 to-primary-900 text-white rounded-xl hover:shadow-lg transition-all"
+                className="p-3 bg-gradient-to-r from-primary-700 to-primary-900 text-white rounded-xl hover:shadow-lg transition-all flex-shrink-0"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -690,7 +690,7 @@ export default function ARIAChat() {
       {isOpen && isMinimized && (
         <div
           onClick={() => setIsMinimized(false)}
-          className="fixed bottom-28 right-6 z-50 bg-white rounded-2xl shadow-xl p-4 cursor-pointer hover:shadow-2xl transition-all border border-gray-100"
+          className="fixed bottom-24 right-4 sm:bottom-28 sm:right-6 z-50 bg-white rounded-2xl shadow-xl p-4 cursor-pointer hover:shadow-2xl transition-all border border-gray-100"
         >
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center">
