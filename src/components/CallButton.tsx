@@ -121,7 +121,7 @@ export default function CallButton({ variant = "default" }: CallButtonProps) {
       ) : (
         <>
           <Phone className="w-4 h-4" />
-          <span>Talk to ARIA</span>
+          <span>Talk to AIVA</span>
         </>
       )}
     </button>
