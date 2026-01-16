@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Phone, Shield, ChevronDown, LayoutDashboard, Users, FileText, ClipboardList } from "lucide-react";
+import { Menu, X, Phone, Shield, ChevronDown, LayoutDashboard, Users, FileText, ClipboardList, Gift } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -121,6 +121,19 @@ export default function Navbar() {
                       <p className="text-xs text-gray-500">Real-time claim status</p>
                     </div>
                   </Link>
+                  <Link
+                    href="/referral"
+                    className="flex items-center space-x-3 px-4 py-3 hover:bg-accent-50 transition-colors"
+                    onClick={() => setIsDemoDropdownOpen(false)}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-accent-100 flex items-center justify-center">
+                      <Gift className="w-5 h-5 text-accent-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Refer & Earn</p>
+                      <p className="text-xs text-gray-500">Share & earn $50</p>
+                    </div>
+                  </Link>
                 </div>
               )}
             </div>
@@ -197,6 +210,14 @@ export default function Navbar() {
                 >
                   <ClipboardList className="w-5 h-5 text-green-600" />
                   <span className="text-gray-600 font-medium">Track a Claim</span>
+                </Link>
+                <Link
+                  href="/referral"
+                  className="flex items-center space-x-3 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Gift className="w-5 h-5 text-accent-600" />
+                  <span className="text-gray-600 font-medium">Refer & Earn $50</span>
                 </Link>
               </div>
 
