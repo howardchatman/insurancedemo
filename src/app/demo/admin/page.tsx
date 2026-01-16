@@ -405,7 +405,7 @@ export default function AdminDashboard() {
                   </div>
                   <div>
                     <h2 className="text-base md:text-lg font-bold text-gray-900">Recent AI Calls</h2>
-                    <p className="text-xs md:text-sm text-gray-500">Calls handled by ARIA</p>
+                    <p className="text-xs md:text-sm text-gray-500">Calls handled by AIVA</p>
                   </div>
                 </div>
                 <button className="flex items-center space-x-2 px-3 py-1.5 md:py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-xs md:text-sm self-start sm:self-auto">

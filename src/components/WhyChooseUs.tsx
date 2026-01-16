@@ -88,7 +88,7 @@ export default function WhyChooseUs() {
                 </a>
                 <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-accent-500 text-white rounded-xl font-semibold hover:bg-accent-400 transition-all">
                   <MessageSquare className="w-5 h-5" />
-                  <span>Chat with ARIA</span>
+                  <span>Chat with AIVA</span>
                 </button>
               </div>
             </div>
