@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Phone, Shield, ChevronDown, LayoutDashboard, Users, FileText } from "lucide-react";
+import { Menu, X, Phone, Shield, ChevronDown, LayoutDashboard, Users, FileText, ClipboardList } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -108,6 +108,19 @@ export default function Navbar() {
                       <p className="text-xs text-gray-500">View policies & claims</p>
                     </div>
                   </Link>
+                  <Link
+                    href="/claims"
+                    className="flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 transition-colors"
+                    onClick={() => setIsDemoDropdownOpen(false)}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                      <ClipboardList className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Track a Claim</p>
+                      <p className="text-xs text-gray-500">Real-time claim status</p>
+                    </div>
+                  </Link>
                 </div>
               )}
             </div>
@@ -176,6 +189,14 @@ export default function Navbar() {
                 >
                   <Users className="w-5 h-5 text-accent-600" />
                   <span className="text-gray-600 font-medium">Client Portal</span>
+                </Link>
+                <Link
+                  href="/claims"
+                  className="flex items-center space-x-3 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <ClipboardList className="w-5 h-5 text-green-600" />
+                  <span className="text-gray-600 font-medium">Track a Claim</span>
                 </Link>
               </div>
 

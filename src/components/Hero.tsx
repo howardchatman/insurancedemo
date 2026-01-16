@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, Car, Home, Heart, Briefcase, ChevronDown, ArrowRight, CheckCircle } from "lucide-react";
+import { Shield, Car, Home, Heart, Briefcase, ChevronDown, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import InsuranceQuiz from "./InsuranceQuiz";
 
 export default function Hero() {
   const [selectedType, setSelectedType] = useState<"personal" | "business">("personal");
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
 
   return (
     <section className="relative min-h-[90vh] flex items-center">
@@ -84,10 +86,22 @@ export default function Hero() {
                   ))}
                 </div>
 
-                <button className="w-full py-4 bg-gradient-to-r from-primary-800 to-primary-900 text-white rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-primary-900/25 transition-all">
-                  <span>Get Your Free Quote</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => setIsQuizOpen(true)}
+                    className="flex-1 py-4 bg-gradient-to-r from-accent-500 to-accent-400 text-white rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-accent-500/25 transition-all"
+                  >
+                    <Sparkles className="w-5 h-5" />
+                    <span>Find My Coverage</span>
+                  </button>
+                  <a
+                    href="#quote"
+                    className="flex-1 py-4 bg-gradient-to-r from-primary-800 to-primary-900 text-white rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-primary-900/25 transition-all"
+                  >
+                    <span>Get a Quote</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </a>
+                </div>
               </>
             ) : (
               <>
@@ -113,10 +127,22 @@ export default function Hero() {
                   ))}
                 </div>
 
-                <button className="w-full py-4 bg-gradient-to-r from-primary-800 to-primary-900 text-white rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-primary-900/25 transition-all">
-                  <span>Request Business Consultation</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => setIsQuizOpen(true)}
+                    className="flex-1 py-4 bg-gradient-to-r from-accent-500 to-accent-400 text-white rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-accent-500/25 transition-all"
+                  >
+                    <Sparkles className="w-5 h-5" />
+                    <span>Find My Coverage</span>
+                  </button>
+                  <a
+                    href="#contact"
+                    className="flex-1 py-4 bg-gradient-to-r from-primary-800 to-primary-900 text-white rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-primary-900/25 transition-all"
+                  >
+                    <span>Request Consultation</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </a>
+                </div>
               </>
             )}
           </div>
@@ -140,6 +166,9 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      {/* Insurance Quiz Modal */}
+      <InsuranceQuiz isOpen={isQuizOpen} onClose={() => setIsQuizOpen(false)} />
     </section>
   );
 }

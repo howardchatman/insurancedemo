@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS insurance_leads (
   phone VARCHAR(50),
   message TEXT,
   preferred_contact VARCHAR(20) DEFAULT 'email' CHECK (preferred_contact IN ('email', 'phone', 'text')),
-  source VARCHAR(50) DEFAULT 'contact_form' CHECK (source IN ('contact_form', 'chat', 'phone', 'quote')),
+  source VARCHAR(50) DEFAULT 'contact_form' CHECK (source IN ('contact_form', 'chat', 'phone', 'quote', 'lead_gate', 'quiz')),
   status VARCHAR(20) DEFAULT 'new' CHECK (status IN ('new', 'contacted', 'qualified', 'converted')),
   insurance_type VARCHAR(50),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -79,6 +79,45 @@ CREATE TABLE IF NOT EXISTS insurance_newsletter_subscriptions (
   is_active BOOLEAN DEFAULT true
 );
 
+-- Insurance quiz results - stores personalized quiz answers and recommendations
+CREATE TABLE IF NOT EXISTS insurance_quiz_results (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  lead_id UUID REFERENCES insurance_leads(id) ON DELETE SET NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50),
+  answers JSONB NOT NULL,
+  recommendations JSONB NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insurance claims - tracks customer claims
+CREATE TABLE IF NOT EXISTS insurance_claims (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  lead_id UUID REFERENCES insurance_leads(id) ON DELETE SET NULL,
+  claim_number VARCHAR(50) UNIQUE NOT NULL,
+  claim_type VARCHAR(50) NOT NULL CHECK (claim_type IN ('auto', 'home', 'life', 'health', 'business')),
+  description TEXT,
+  date_submitted TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  status VARCHAR(20) DEFAULT 'submitted' CHECK (status IN ('submitted', 'review', 'adjuster', 'assessment', 'payment', 'resolved', 'denied')),
+  estimated_amount DECIMAL(12, 2),
+  approved_amount DECIMAL(12, 2),
+  adjuster_name VARCHAR(255),
+  adjuster_phone VARCHAR(50),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insurance claim updates - timeline events for claims
+CREATE TABLE IF NOT EXISTS insurance_claim_updates (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  claim_id UUID REFERENCES insurance_claims(id) ON DELETE CASCADE,
+  status VARCHAR(20) NOT NULL,
+  message TEXT NOT NULL,
+  is_complete BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_insurance_leads_email ON insurance_leads(email);
 CREATE INDEX IF NOT EXISTS idx_insurance_leads_status ON insurance_leads(status);
@@ -87,6 +126,10 @@ CREATE INDEX IF NOT EXISTS idx_insurance_quotes_lead_id ON insurance_quotes(lead
 CREATE INDEX IF NOT EXISTS idx_insurance_policy_inquiries_lead_id ON insurance_policy_inquiries(lead_id);
 CREATE INDEX IF NOT EXISTS idx_insurance_chat_conversations_session_id ON insurance_chat_conversations(session_id);
 CREATE INDEX IF NOT EXISTS idx_insurance_phone_calls_retell_call_id ON insurance_phone_calls(retell_call_id);
+CREATE INDEX IF NOT EXISTS idx_insurance_quiz_results_email ON insurance_quiz_results(email);
+CREATE INDEX IF NOT EXISTS idx_insurance_claims_claim_number ON insurance_claims(claim_number);
+CREATE INDEX IF NOT EXISTS idx_insurance_claims_status ON insurance_claims(status);
+CREATE INDEX IF NOT EXISTS idx_insurance_claim_updates_claim_id ON insurance_claim_updates(claim_id);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE insurance_leads ENABLE ROW LEVEL SECURITY;
@@ -95,6 +138,9 @@ ALTER TABLE insurance_policy_inquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE insurance_chat_conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE insurance_phone_calls ENABLE ROW LEVEL SECURITY;
 ALTER TABLE insurance_newsletter_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE insurance_quiz_results ENABLE ROW LEVEL SECURITY;
+ALTER TABLE insurance_claims ENABLE ROW LEVEL SECURITY;
+ALTER TABLE insurance_claim_updates ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for anonymous access (for the demo)
 -- In production, you'd want more restrictive policies
@@ -117,6 +163,21 @@ CREATE POLICY "Allow anonymous insert on insurance_phone_calls" ON insurance_pho
 CREATE POLICY "Allow anonymous insert on insurance_newsletter_subscriptions" ON insurance_newsletter_subscriptions
   FOR INSERT TO anon WITH CHECK (true);
 
+CREATE POLICY "Allow anonymous insert on insurance_quiz_results" ON insurance_quiz_results
+  FOR INSERT TO anon WITH CHECK (true);
+
+CREATE POLICY "Allow anonymous read on insurance_claims" ON insurance_claims
+  FOR SELECT TO anon USING (true);
+
+CREATE POLICY "Allow anonymous insert on insurance_claims" ON insurance_claims
+  FOR INSERT TO anon WITH CHECK (true);
+
+CREATE POLICY "Allow anonymous read on insurance_claim_updates" ON insurance_claim_updates
+  FOR SELECT TO anon USING (true);
+
+CREATE POLICY "Allow anonymous insert on insurance_claim_updates" ON insurance_claim_updates
+  FOR INSERT TO anon WITH CHECK (true);
+
 -- Function to update updated_at timestamp (reuse if exists)
 CREATE OR REPLACE FUNCTION update_insurance_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -133,4 +194,8 @@ CREATE TRIGGER update_insurance_leads_updated_at
 
 CREATE TRIGGER update_insurance_chat_conversations_updated_at
   BEFORE UPDATE ON insurance_chat_conversations
+  FOR EACH ROW EXECUTE FUNCTION update_insurance_updated_at_column();
+
+CREATE TRIGGER update_insurance_claims_updated_at
+  BEFORE UPDATE ON insurance_claims
   FOR EACH ROW EXECUTE FUNCTION update_insurance_updated_at_column();
