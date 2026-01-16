@@ -28,6 +28,12 @@ import {
   Car,
   Home,
   Heart,
+  Gift,
+  Share2,
+  Copy,
+  Check,
+  Users,
+  Sparkles,
 } from "lucide-react";
 
 // Mock policy data
@@ -110,8 +116,34 @@ const formatPrice = (price: number) => {
 
 export default function UserDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [referralCopied, setReferralCopied] = useState(false);
 
   const totalPremium = myPolicies.reduce((sum, p) => sum + p.premium, 0);
+
+  // Client info - in production this would come from auth/user profile
+  const clientName = "Sarah Johnson";
+  const clientSlug = clientName.toLowerCase().replace(/\s+/g, '-'); // "sarah-johnson"
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://insurancedemo.chatmaninc.com";
+  const personalReferralLink = `${baseUrl}/referral/${clientSlug}`;
+
+  // Referral stats - in production these would come from API
+  const referralStats = {
+    totalReferrals: 3,
+    pendingRewards: 1,
+    totalEarned: 100,
+  };
+
+  const copyReferralLink = async () => {
+    try {
+      await navigator.clipboard.writeText(personalReferralLink);
+      setReferralCopied(true);
+      setTimeout(() => setReferralCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  const shareMessage = `I love my insurance experience with Chatman Insurance! They have 24/7 AI support and super fast claims. Get a free quote and we both earn $50: ${personalReferralLink}`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -469,6 +501,110 @@ export default function UserDashboard() {
               <button className="w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-primary-700 text-white rounded-xl font-semibold hover:bg-primary-800 transition-colors text-sm md:text-base">
                 Schedule a Call
               </button>
+            </div>
+          </div>
+
+          {/* Share & Earn Section */}
+          <div className="mt-4 md:mt-6 bg-gradient-to-r from-accent-500 to-accent-400 rounded-xl shadow-sm overflow-hidden">
+            <div className="p-4 md:p-6">
+              {/* Header */}
+              <div className="flex items-start space-x-3 md:space-x-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <Gift className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-base md:text-lg font-bold text-white">Share & Earn $50</h2>
+                  <p className="text-xs md:text-sm text-white/90 mt-1">
+                    Share your link and earn $50 for every friend who gets a policy!
+                  </p>
+                </div>
+              </div>
+
+              {/* Referral Stats - Mobile optimized */}
+              <div className="grid grid-cols-3 gap-2 mt-4 bg-white/20 rounded-xl p-3">
+                <div className="text-center">
+                  <div className="flex items-center justify-center text-white">
+                    <Users className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                    <span className="text-lg md:text-xl font-bold">{referralStats.totalReferrals}</span>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-white/80">Referrals</p>
+                </div>
+                <div className="text-center border-x border-white/30">
+                  <div className="flex items-center justify-center text-white">
+                    <Sparkles className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                    <span className="text-lg md:text-xl font-bold">{referralStats.pendingRewards}</span>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-white/80">Pending</p>
+                </div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center text-white">
+                    <DollarSign className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                    <span className="text-lg md:text-xl font-bold">{referralStats.totalEarned}</span>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-white/80">Earned</p>
+                </div>
+              </div>
+
+              {/* Personal Referral Link */}
+              <div className="mt-4">
+                <p className="text-xs text-white/80 mb-2">Your Personal Referral Link:</p>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 min-w-0 bg-white/20 rounded-xl px-3 md:px-4 py-3 text-white font-mono text-xs md:text-sm truncate overflow-hidden">
+                    {personalReferralLink}
+                  </div>
+                  <button
+                    onClick={copyReferralLink}
+                    className={`p-2.5 md:p-3 rounded-xl transition-all flex-shrink-0 ${
+                      referralCopied
+                        ? "bg-green-500 text-white"
+                        : "bg-white text-accent-600 hover:bg-white/90"
+                    }`}
+                  >
+                    {referralCopied ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      <Copy className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+                {referralCopied && (
+                  <p className="text-sm text-white font-medium mt-2">Link copied!</p>
+                )}
+              </div>
+
+              {/* Share Buttons - Grid on mobile */}
+              <div className="mt-4 grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+                <a
+                  href={`sms:?body=${encodeURIComponent(shareMessage)}`}
+                  className="flex items-center justify-center space-x-2 px-3 md:px-4 py-2 bg-white text-accent-600 rounded-lg text-xs md:text-sm font-medium hover:bg-white/90 transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Text</span>
+                </a>
+                <a
+                  href={`mailto:?subject=${encodeURIComponent("Check out my insurance company - we both get $50!")}&body=${encodeURIComponent(shareMessage)}`}
+                  className="flex items-center justify-center space-x-2 px-3 md:px-4 py-2 bg-white/20 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-white/30 transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>Email</span>
+                </a>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(personalReferralLink)}&quote=${encodeURIComponent(shareMessage)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center space-x-2 px-3 md:px-4 py-2 bg-white/20 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-white/30 transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Facebook</span>
+                </a>
+                <Link
+                  href="/referral"
+                  className="flex items-center justify-center space-x-2 px-3 md:px-4 py-2 bg-primary-800 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-primary-900 transition-colors"
+                >
+                  <Gift className="w-4 h-4" />
+                  <span>Full Program</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

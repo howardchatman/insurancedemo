@@ -26,6 +26,11 @@ import {
   X,
   FileText,
   DollarSign,
+  Share2,
+  Copy,
+  Check,
+  QrCode,
+  Link,
 } from "lucide-react";
 
 // Mock data for policies
@@ -133,6 +138,22 @@ const getLeadStatusBadge = (status: string) => {
 
 export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [bookingLinkCopied, setBookingLinkCopied] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
+
+  // Agent booking link - in production this would come from the agent's profile
+  const agentName = "Chatman Insurance";
+  const bookingLink = "https://calendly.com/chatman-insurance/consultation";
+
+  const copyBookingLink = async () => {
+    try {
+      await navigator.clipboard.writeText(bookingLink);
+      setBookingLinkCopied(true);
+      setTimeout(() => setBookingLinkCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -439,6 +460,114 @@ export default function AdminDashboard() {
                   <p className="mt-2 text-xs md:text-sm text-gray-600 ml-10 md:ml-14">{call.summary}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Share Booking Link */}
+          <div className="mt-4 md:mt-6 bg-gradient-to-r from-primary-800 to-primary-900 rounded-xl shadow-sm overflow-hidden">
+            <div className="p-4 md:p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Calendar className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-white">Share Your Booking Link</h2>
+                    <p className="text-sm text-white/80">Let clients book consultations directly</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setShowQRCode(!showQRCode)}
+                    className={`p-2 md:p-3 rounded-xl transition-all ${
+                      showQRCode ? "bg-white text-primary-700" : "bg-white/20 text-white hover:bg-white/30"
+                    }`}
+                  >
+                    <QrCode className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={copyBookingLink}
+                    className={`flex items-center space-x-2 px-4 py-2 md:py-3 rounded-xl font-medium transition-all ${
+                      bookingLinkCopied
+                        ? "bg-green-500 text-white"
+                        : "bg-white text-primary-700 hover:bg-white/90"
+                    }`}
+                  >
+                    {bookingLinkCopied ? (
+                      <>
+                        <Check className="w-5 h-5" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-5 h-5" />
+                        <span>Copy Link</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Booking Link Display */}
+              <div className="mt-4 bg-white/10 rounded-xl p-3 flex items-center space-x-3">
+                <Link className="w-5 h-5 text-white/60 flex-shrink-0" />
+                <span className="text-white/90 text-sm font-mono truncate">{bookingLink}</span>
+              </div>
+
+              {/* QR Code Section */}
+              {showQRCode && (
+                <div className="mt-4 flex flex-col items-center bg-white rounded-xl p-6">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(bookingLink)}&bgcolor=ffffff&color=102a43`}
+                    alt="Booking QR Code"
+                    className="w-48 h-48"
+                  />
+                  <p className="mt-3 text-sm text-gray-600">Scan to book a consultation</p>
+                  <a
+                    href={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(bookingLink)}&bgcolor=ffffff&color=102a43&format=png`}
+                    download="booking-qr-code.png"
+                    className="mt-3 text-sm text-primary-700 font-medium hover:text-primary-800"
+                  >
+                    Download QR Code
+                  </a>
+                </div>
+              )}
+
+              {/* Share Buttons */}
+              <div className="mt-4 flex flex-wrap gap-2">
+                <a
+                  href={`sms:?body=${encodeURIComponent(`Book a free insurance consultation with ${agentName}: ${bookingLink}`)}`}
+                  className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Text</span>
+                </a>
+                <a
+                  href={`mailto:?subject=${encodeURIComponent(`Book Your Free Insurance Consultation`)}&body=${encodeURIComponent(`Hi!\n\nI wanted to share my booking link for a free insurance consultation.\n\nBook your appointment here: ${bookingLink}\n\nLooking forward to speaking with you!\n\n${agentName}`)}`}
+                  className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Email</span>
+                </a>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(bookingLink)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#1877F2] text-white rounded-lg text-sm font-medium hover:bg-[#166FE5] transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Facebook</span>
+                </a>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(bookingLink)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#0A66C2] text-white rounded-lg text-sm font-medium hover:bg-[#095196] transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>LinkedIn</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
