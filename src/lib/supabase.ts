@@ -13,7 +13,7 @@ export interface InsuranceLead {
   phone: string;
   message?: string;
   preferred_contact: 'email' | 'phone' | 'text';
-  source: 'contact_form' | 'chat' | 'phone' | 'quote';
+  source: 'contact_form' | 'chat' | 'phone' | 'quote' | 'lead_gate';
   status: 'new' | 'contacted' | 'qualified' | 'converted';
   insurance_type?: string;
   created_at?: string;
