@@ -71,7 +71,7 @@ const initialMessages: Message[] = [
   {
     id: 1,
     sender: "ai",
-    text: "Hi! I'm ARIA, your AI insurance assistant. I'm here 24/7 to help you find the perfect coverage for your needs. How can I assist you today?",
+    text: "Hi! I'm AIVA, your AI insurance assistant. I'm here 24/7 to help you find the perfect coverage for your needs. How can I assist you today?",
     time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     options: [
       "Get an insurance quote",
@@ -440,7 +440,7 @@ export default function ARIAChat() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h4 className="font-semibold text-white">ARIA</h4>
+                <h4 className="font-semibold text-white">AIVA</h4>
                 <div className="flex items-center space-x-1">
                   <span className="w-2 h-2 bg-accent-400 rounded-full animate-pulse" />
                   <span className="text-xs text-white/80">Online 24/7</span>
@@ -508,7 +508,7 @@ export default function ARIAChat() {
             <div className="bg-trust-50 border-b border-trust-100 px-4 py-3 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <Volume2 className="w-5 h-5 text-trust-600 animate-pulse" />
-                <span className="text-sm font-medium text-trust-700">Voice call active - ARIA is listening</span>
+                <span className="text-sm font-medium text-trust-700">Voice call active - AIVA is listening</span>
               </div>
               <button
                 onClick={endCall}
@@ -680,7 +680,7 @@ export default function ARIAChat() {
               </button>
             </div>
             <p className="text-xs text-gray-400 mt-2 text-center">
-              Powered by ARIA • Available 24/7
+              Powered by AIVA • Available 24/7
             </p>
           </div>
         </div>
@@ -697,7 +697,7 @@ export default function ARIAChat() {
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-900">ARIA</h4>
+              <h4 className="font-semibold text-gray-900">AIVA</h4>
               <p className="text-xs text-gray-500">Click to expand chat</p>
             </div>
           </div>
