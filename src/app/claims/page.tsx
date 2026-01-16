@@ -101,7 +101,7 @@ export default function ClaimsPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full mb-6">
             <Shield className="w-4 h-4 text-accent-400 mr-2" />
-            <span className="text-white/90 text-sm font-medium">Track Your Claim Like an Amazon Package</span>
+            <span className="text-white/90 text-sm font-medium">Track Your Claim in Real-Time</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
