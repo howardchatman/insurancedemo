@@ -11,6 +11,7 @@ export default function LeadGatePopup({ delaySeconds = 5 }: LeadGatePopupProps) 
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,6 +36,7 @@ export default function LeadGatePopup({ delaySeconds = 5 }: LeadGatePopupProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
     try {
       const response = await fetch("/api/leads", {
@@ -49,19 +51,33 @@ export default function LeadGatePopup({ delaySeconds = 5 }: LeadGatePopupProps) 
         }),
       });
 
-      if (response.ok) {
-        setIsSubmitted(true);
-        localStorage.setItem("insurance_lead_captured", "true");
-        localStorage.setItem("insurance_lead_name", formData.name);
-        localStorage.setItem("insurance_lead_email", formData.email);
+      // Always unlock the site and save to localStorage (for demo purposes)
+      setIsSubmitted(true);
+      localStorage.setItem("insurance_lead_captured", "true");
+      localStorage.setItem("insurance_lead_name", formData.name);
+      localStorage.setItem("insurance_lead_email", formData.email);
 
-        // Close popup after showing success
-        setTimeout(() => {
-          setIsVisible(false);
-        }, 2000);
+      if (!response.ok) {
+        // Log the error but don't block the user
+        const errorData = await response.json();
+        console.error("API error:", errorData);
       }
-    } catch (error) {
-      console.error("Error submitting lead:", error);
+
+      // Close popup after showing success
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Error submitting lead:", err);
+      // Still unlock site even on network error for demo
+      setIsSubmitted(true);
+      localStorage.setItem("insurance_lead_captured", "true");
+      localStorage.setItem("insurance_lead_name", formData.name);
+      localStorage.setItem("insurance_lead_email", formData.email);
+
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 2000);
     } finally {
       setIsSubmitting(false);
     }
